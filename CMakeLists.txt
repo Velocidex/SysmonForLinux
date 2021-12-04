@@ -93,9 +93,11 @@ find_package(LibXml2 2.0.0 REQUIRED)
 if(SYSMON_ADO)
 set(SYSMON_COMMON_SOURCE_DIR "${CMAKE_SOURCE_DIR}/../sysmonCommon/")
 set(SYSMON_TESTS_SOURCE_DIR "${CMAKE_SOURCE_DIR}/../test/UnitTests/")
+set(SYSMON_GENERATED_DIR "${CMAKE_SOURCE_DIR}/../Generated/")
 else()
 set(SYSMON_COMMON_SOURCE_DIR "${CMAKE_SOURCE_DIR}/sysmonCommon/")
 set(SYSMON_TESTS_SOURCE_DIR "${CMAKE_SOURCE_DIR}/sysmonCommon/UnitTests/")
+set(SYSMON_GENERATED_DIR "${CMAKE_SOURCE_DIR}/Generated/")
 endif()
 
 #
@@ -119,10 +121,10 @@ add_executable(sysmon
                "${SYSMON_COMMON_SOURCE_DIR}/networkCommon.cpp"
                "${SYSMON_COMMON_SOURCE_DIR}/networkmiscCommon.cpp"
                "${SYSMON_COMMON_SOURCE_DIR}/dumpConfiguration.c"
-               sysmonevents.h           # automatically generated during build
-               sysmonmsg.h              # automatically generated during build
-               sysmonmsgop.c            # automatically generated during build
-               sysmonmsgop.h            # automatically generated during build
+               "${SYSMON_GENERATED_DIR}/sysmonevents.h"
+               "${SYSMON_GENERATED_DIR}/sysmonmsg.h"
+               "${SYSMON_GENERATED_DIR}/sysmonmsgop.c"
+               "${SYSMON_GENERATED_DIR}/sysmonmsgop.h"
                # following are all embedded in sysmon as objects
                manifest.xml.o
                sysmonEBPFkern4.15.o.o
@@ -150,6 +152,7 @@ target_include_directories(sysmon PUBLIC
                            "/usr/local/include"
                            "${LIBXML2_INCLUDE_DIR}"
                            "/opt/sysinternalsEBPF/ebpfKern"
+                           "${SYSMON_GENERATED_DIR}"
                            )
 
 
@@ -253,10 +256,10 @@ set(EBPF_DEPENDS
                ebpfKern/sysmonCloseFD.c
                ebpfKern/sysmonCloseFD_tp.c
                ebpfKern/sysmonCloseFD_rawtp.c
-               sysmonevents.h   # automatically generated during build
-               sysmonmsg.h      # automatically generated during build
-               sysmonmsgop.c    # automatically generated during build
-               sysmonmsgop.h    # automatically generated during build
+               "${SYSMON_GENERATED_DIR}/sysmonevents.h"
+               "${SYSMON_GENERATED_DIR}/sysmonmsg.h"
+               "${SYSMON_GENERATED_DIR}/sysmonmsgop.c"
+               "${SYSMON_GENERATED_DIR}/sysmonmsgop.h"
 )
 
 
@@ -272,10 +275,10 @@ target_link_libraries(sysmon sysinternalsEBPF "${LIBXML2_LIBRARIES}" pthread)
 add_executable(sysmonLogView
                sysmonLogView/sysmonLogView.cpp
                sysmonLogView/sysmonGetEventName.c
-               sysmonmsgop.c
-               sysmonevents.h
-               sysmonmsg.h
-               sysmonmsgop.h
+               "${SYSMON_GENERATED_DIR}/sysmonmsgop.c"
+               "${SYSMON_GENERATED_DIR}/sysmonevents.h"
+               "${SYSMON_GENERATED_DIR}/sysmonmsg.h"
+               "${SYSMON_GENERATED_DIR}/sysmonmsgop.h"
 )
 
 target_include_directories(sysmonLogView PUBLIC
@@ -284,6 +287,7 @@ target_include_directories(sysmonLogView PUBLIC
                            "${PROJECT_BINARY_DIR}"
                            "/usr/include"
                            "${LIBXML2_INCLUDE_DIR}"
+                           "${SYSMON_GENERATED_DIR}"
                            )
 
 target_link_libraries(sysmonLogView "${LIBXML2_LIBRARIES}")
@@ -298,6 +302,7 @@ add_executable(checkEBPFsizes
 
 target_include_directories(checkEBPFsizes PUBLIC
                            "/usr/include"
+                           "${SYSMON_GENERATED_DIR}"
                            )
 
 target_link_libraries(checkEBPFsizes elf)
@@ -327,10 +332,10 @@ add_executable(sysmonUnitTests
                "${SYSMON_COMMON_SOURCE_DIR}/xml.cpp"
                "${SYSMON_COMMON_SOURCE_DIR}/rules.c"
                "${SYSMON_COMMON_SOURCE_DIR}/eventsCommon.cpp"
-               sysmonevents.h
-               sysmonmsg.h
-               sysmonmsgop.h
-               sysmonmsgop.c
+               "${SYSMON_GENERATED_DIR}/sysmonevents.h"
+               "${SYSMON_GENERATED_DIR}/sysmonmsg.h"
+               "${SYSMON_GENERATED_DIR}/sysmonmsgop.h"
+               "${SYSMON_GENERATED_DIR}/sysmonmsgop.c"
                "${PROJECT_BINARY_DIR}/testdata"
                "${PROJECT_BINARY_DIR}/yoursleep"
                )
@@ -344,6 +349,7 @@ target_include_directories(sysmonUnitTests PUBLIC
                            "/usr/include"
                            "${LIBXML2_INCLUDE_DIR}"
                            "${GTEST_INCLUDE_DIRS}"
+                           "${SYSMON_GENERATED_DIR}"
                            )
 
 #
@@ -503,6 +509,7 @@ set(CLANG_INCLUDES
                    -I "/opt/sysinternalsEBPF/libbpf"
                    -I "${CMAKE_BINARY_DIR}"
                    -I "${libbpf_SOURCE_DIR}/src"
+                   -I "${SYSMON_GENERATED_DIR}"
                    )
 
 #
