@@ -12,8 +12,8 @@
 2. A new command like option "-json" allows events to be written in
    JSON since this is the 21st century and XML is so quaint.
 
-The updated service file contains both these option. Once the service
-is installed simple read from the unix domain socket and events will
+The updated service file contains both these options. Once the service
+is installed simply read from the unix domain socket and events will
 be sent in JSONL format, eg:
 
 ```
